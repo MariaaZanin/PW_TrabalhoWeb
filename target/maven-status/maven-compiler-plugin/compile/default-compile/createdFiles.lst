@@ -1,11 +1,13 @@
+br\edu\ifsul\dao\Ordem.class
 br\edu\ifsul\controle\ControleAeroporto.class
 br\edu\ifsul\dao\ClasseDAO.class
 br\edu\ifsul\dao\DAOGenerico.class
 br\edu\ifsul\dao\CidadeDAO.class
+br\edu\ifsul\dao\ConverterOrdem.class
+br\edu\ifsul\util\Util.class
 br\edu\ifsul\controle\ControleClasse.class
 br\edu\ifsul\dao\AeroportoDAO.class
 br\edu\ifsul\dao\PessoaDAO.class
 br\edu\ifsul\converters\ConverterCidade.class
-br\edu\ifsul\util\Util.class
 br\edu\ifsul\controle\ControlePessoa.class
 br\edu\ifsul\controle\ControleCidade.class

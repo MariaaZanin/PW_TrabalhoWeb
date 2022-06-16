@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="/templates/template.xhtml">
-        <ui:define name="titulo">CRUD de Aeroportos</ui:define>
+        <ui:define name="titulo">Manutenção de Aeroportos</ui:define>
         <ui:define name="conteudo">
             <h:form id="formListagem" prependId="false">
                 <p:growl/>
@@ -15,8 +15,48 @@
                                  update="formEdicao"
                                  process="@this"
                                  oncomplete="PF('dlg').show();"/>
+                <div align="center">
+                    <p:panelGrid columns="11">
+                        <p:outputLabel value="Ordem:"/>
+                        <p:selectOneMenu value="#{controleAeroporto.dao.ordemAtual}"
+                                         converter="#{controleAeroporto.dao.converterOrdem}">
+                            <f:selectItems value="#{controleAeroporto.dao.listaOrdem}"
+                                var="ord" itemValue="#{ord.atributo}"/>
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>   
+                        <p:outputLabel value="Filtro: "/>
+                        <p:inputText value="#{controleAeroporto.dao.filtro}">
+                            <p:ajax event="blur" update="listagem"/>
+                        </p:inputText>
+                        <p:commandButton value="Filtrar" update="listagem"/>
+                        <p:outputLabel value="Máximo de Objetos"/>
+                        <p:selectOneMenu value="#{controleAeroporto.dao.maximoObjeto}">
+                            <f:selectItem itemValue="3" itemLabel="3"/>
+                            <f:selectItem itemValue="5" itemLabel="5"/>
+                            <f:selectItem itemValue="10" itemLabel="10"/>
+                            <f:selectItem itemValue="20" itemLabel="20"/>
+                            <f:selectItem itemValue="50" itemLabel="50"/>  
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>   
+                        <p:commandButton action="#{controleAeroporto.dao.primeiro()}"
+                                         title="Primeiro" update="listagem"
+                                         icon="pi pi-step-backward"/>
+                        <p:commandButton action="#{controleAeroporto.dao.anterior()}"
+                                         title="Anterior" update="listagem"
+                                         icon="pi pi-chevron-left"/>
+                        <p:commandButton action="#{controleAeroporto.dao.proximo()}"
+                                         title="Proximo" update="listagem"
+                                         icon="pi pi-chevron-right"/>
+                        <p:commandButton action="#{controleAeroporto.dao.ultimo()}"
+                                         title="Ultimo" update="listagem"
+                                         icon="pi pi-step-forward"/>
+                    </p:panelGrid>
+                </div>
                 <p:dataTable value="#{controleAeroporto.dao.listObjetos}" 
                              var="obj" id="listagem">
+                     <f:facet name="footer">
+                        <p:outputLabel value="#{controleAeroporto.dao.mensagemNavegacao}"/>
+                    </f:facet>
                     <p:column headerText="ID">
                         <p:outputLabel value="#{obj.id}"/>
                     </p:column>
@@ -26,7 +66,7 @@
                     <p:column headerText="Operação Noturna">
                         <p:outputLabel value="#{obj.operacaoNoturna}"/>
                     </p:column> 
-                    <p:column headerText="Cidade">
+                    <p:column headerText="Aeroporto">
                         <p:outputLabel value="#{obj.cidade.nome}"/>
                     </p:column> 
                     <p:column headerText="Ações">
@@ -65,13 +105,13 @@
                             <p:outputLabel value="Operação Noturna" for="txtOperacaoNoturna"/>                                                   
                             <p:selectBooleanCheckbox value="#{controleAeroporto.objeto.operacaoNoturna}" 
                                                      id="txtOperacaoNoturna"/>
-                            <p:outputLabel value="Cidade" for="selectCidade"/>
+                            <p:outputLabel value="Aeroporto" for="selectAeroporto"/>
                             <p:selectOneMenu value="#{controleAeroporto.objeto.cidade}"
-                                             id="selectCidade"
+                                             id="selectAeroporto"
                                              filter="true"
                                              filterMatchMode="startsWith">
                                 <f:converter binding="#{converterCidade}"/>
-                                <f:selectItem itemLabel="Selecione uma Cidade"
+                                <f:selectItem itemLabel="Selecione uma Aeroporto"
                                               noSelectionOption="true"/>
                                 <f:selectItems 
                                     value="#{controleAeroporto.daoCidade.listObjetos}"
