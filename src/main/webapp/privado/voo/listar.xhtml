@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/templates/template.xhtml">
+        <ui:define name="titulo">Manutenção de Voos</ui:define>
+        <ui:define name="conteudo">
+            <h:form id="formListagem" prependId="false">
+                <p:growl/>
+                <p:commandButton value="Novo" actionListener="#{controleVoo.novo()}"
+                                 icon="pi pi-plus"
+                                 update="formEdicao"
+                                 process="@this"
+                                 oncomplete="PF('dlg').show();"/>
+                <div align="center">
+                    <p:panelGrid columns="11">
+                        <p:outputLabel value="Ordem:"/>
+                        <p:selectOneMenu value="#{controleVoo.dao.ordemAtual}"
+                                         converter="#{controleVoo.dao.converterOrdem}">
+                            <f:selectItems value="#{controleVoo.dao.listaOrdem}"
+                                           var="ord" itemValue="#{ord.atributo}"/>
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>   
+                        <p:outputLabel value="Filtro: "/>
+                        <p:inputText value="#{controleVoo.dao.filtro}">
+                            <p:ajax event="blur" update="listagem"/>
+                        </p:inputText>
+                        <p:commandButton value="Filtrar" update="listagem"/>
+                        <p:outputLabel value="Máximo de Objetos"/>
+                        <p:selectOneMenu value="#{controleVoo.dao.maximoObjeto}">
+                            <f:selectItem itemValue="3" itemLabel="3"/>
+                            <f:selectItem itemValue="5" itemLabel="5"/>
+                            <f:selectItem itemValue="10" itemLabel="10"/>
+                            <f:selectItem itemValue="20" itemLabel="20"/>
+                            <f:selectItem itemValue="50" itemLabel="50"/>  
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>   
+                        <p:commandButton action="#{controleVoo.dao.primeiro()}"
+                                         title="Primeiro" update="listagem"
+                                         icon="pi pi-step-backward"/>
+                        <p:commandButton action="#{controleVoo.dao.anterior()}"
+                                         title="Anterior" update="listagem"
+                                         icon="pi pi-chevron-left"/>
+                        <p:commandButton action="#{controleVoo.dao.proximo()}"
+                                         title="Proximo" update="listagem"
+                                         icon="pi pi-chevron-right"/>
+                        <p:commandButton action="#{controleVoo.dao.ultimo()}"
+                                         title="Ultimo" update="listagem"
+                                         icon="pi pi-step-forward"/>
+                    </p:panelGrid>
+                </div>
+                <p:dataTable value="#{controleVoo.dao.listObjetos}" var="obj"
+                             id="listagem">
+                    <f:facet name="footer">
+                        <p:outputLabel value="#{controleVoo.dao.mensagemNavegacao}"/>
+                    </f:facet>
+                    <p:column headerText="ID">
+                        <p:outputLabel value="#{obj.id}"/>
+                    </p:column> 
+                    <p:column headerText="Descrição">
+                        <p:outputLabel value="#{obj.descricao}"/>
+                    </p:column>     
+                    <p:column headerText="Tempo Estimado">
+                        <p:outputLabel value="#{obj.tempoEstimado}"/>
+                    </p:column> 
+                    <p:column headerText="Ativo">
+                        <p:outputLabel value="#{obj.ativo}"/>
+                    </p:column> 
+                    <p:column headerText="Periodicidade">
+                        <p:outputLabel value="#{obj.periodicidade}"/>
+                    </p:column> 
+                    <p:column headerText="Ações">
+                        <div align="center">
+                            <p:commandButton 
+                                actionListener="#{controleVoo.alterar(obj.id)}"
+                                icon="pi pi-pencil"
+                                title="Editar"
+                                update="formEdicao"
+                                process="@this"
+                                oncomplete="PF('dlg').show();"/>
+                            <p:commandButton
+                                actionListener="#{controleVoo.excluir(obj.id)}"
+                                icon="pi pi-trash"
+                                update="@form"
+                                process="@this"
+                                title="Remover o objeto de id: #{obj.id}"
+                                onclick="if (!confirm('Deseja remover o objeto de id: #{obj.id}'))
+                                            return false"/>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+            </h:form>  
+            <p:dialog header="Edição" widgetVar="dlg" resizable="false"
+                      modal="true" width="80%" height="100%">
+                <h:form id="formEdicao" prependId="false">
+                    <p:growl id="growl"/>
+                    <p:tabView id="tab">
+                        <p:tab title="Dados principais">
+                            <div align="center">
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel value="ID"/>
+                                    <p:inputText validator="#{controleVoo.objeto.id}"
+                                                 size="5" readonly="true"/>
+
+                                    <p:outputLabel value="TempoEstimado" for="txtTempoEstimado"/>
+                                    <p:inputText id="txtTempoEstimado" value="#{controleVoo.objeto.tempoEstimado}"
+                                                 size="14" maxlength="14"
+                                                 placeholder="Obrigatório"/>
+                                    <p:outputLabel value="Ativo" for="txtAtivo"/>
+                                    <p:selectBooleanCheckbox value="#{controleVoo.objeto.ativo}" 
+                                                             id="txtAtivo"/>
+                                    <p:outputLabel value="Periodicidade" for="txtPeriodicidade"/>
+                                    <p:inputText id="txtPeriodicidade" value="#{controleVoo.objeto.periodicidade}"
+                                                 size="16" maxlength="16"
+                                                 placeholder="Obrigatório"/>
+                                </p:panelGrid>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Descrição">
+                            <p:textEditor value="#{controleVoo.objeto.descricao}"
+                                          secure="false" height="200"/>
+                        </p:tab>
+                        <p:tab title="Voo Agendado">
+                            <p:dataTable value="#{controleVoo.objeto.voo_agendado}"
+                                         var="vooAgendado" rowIndexVar="idxVooAgendado"
+                                         id="listaVooAgendado">
+                                <f:facet name="header">
+                                    <p:commandButton value="Novo Voo Agendado"
+                                                     actionListener="#{controleVoo.novoVooAgendado()}"
+                                                     update=":formEdicao"
+                                                     icon="pi pi-plus"
+                                                     process="@this"
+                                                     oncomplete="PF('dlgVooAgendado').show();"/>
+                                </f:facet>
+                                <p:column headerText="ID">
+                                    <p:outputLabel value="#{vooAgendado.id}"/>
+                                </p:column>
+                                <p:column headerText="Aeronave">
+                                    <p:outputLabel value="#{vooAgendado.aeronave}"/>
+                                </p:column>
+                                <p:column headerText="Total Passageiros">
+                                    <p:outputLabel value="#{vooAgendado.totalPassageiros}"/>
+                                </p:column>
+                                <p:column headerText="Data VooAgendado">
+                                    <p:outputLabel value="#{vooAgendado.data}">
+                                        <f:converter converterId="converterCalendar"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Ações">
+                                    <div align="center">
+                                        <p:commandButton actionListener="#{controleVoo.alterarVooAgendado(idxVooAgendado)}"
+                                                         icon="pi pi-pencil"
+                                                         title="Editar"
+                                                         update=":formVooAgendado"
+                                                         process="@this"
+                                                         oncomplete="PF('dlgVooAgendado').show();"/>
+                                        <p:commandButton actionListener="#{controleVoo.removerVooAgendado(idxVooAgendado)}"
+                                                         icon="pi pi-trash"
+                                                         title="Remover"
+                                                         update="tab:listaVooAgendado growl"
+                                                         process="@this"
+                                                         onclick="if (!confirm('Confirma a exclusão'))
+                                                                     return false"/>
+                                    </div>
+                                </p:column>
+                            </p:dataTable>
+
+                        </p:tab>
+                    </p:tabView>
+
+                    <p:panel>
+                        <div align="center">
+                            <p:commandButton value="Salvar"
+                                             icon="pi pi-save"
+                                             actionListener="#{controleVoo.salvar()}"
+                                             update="formEdicao formListagem"
+                                             oncomplete="if(!args.validationFailed){PF('dlg').hide();}"/>
+                        </div>
+                    </p:panel>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog header="Edição de Voo Agendado" widgetVar="dlgVooAgendado" resizable="false"
+                      modal="true">
+                <h:form id="formVooAgendado">
+                    <p:growl/>
+                    <div align="center">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="ID"/>
+                                    <p:inputText validator="#{controleVoo.vooAgendado.id}"
+                                                 size="5" readonly="true"/>
+                            <p:outputLabel value="Data" for="txtData"/>
+                            <p:calendar id="txtData" value="#{controleVoo.vooAgendado.data}"
+                                        mask="true" pattern="dd/MM/yyyy" navigator="true" size="10" required="true">
+                                <f:converter converterId="converterCalendar"/>
+                            </p:calendar>   
+                            <p:outputLabel value="Aeronave" for="txtAeronave"/>
+                            <p:inputText id="txtAeronave" value="#{controleVoo.vooAgendado.aeronave}"
+                                         size="30"/>
+                            <p:outputLabel value="Total Passageiros" for="txtTotalPassageiros"/>
+                            <p:inputText id="txtTotalPassageiros" value="#{controleVoo.vooAgendado.totalPassageiros}"
+                                         size="4" maxlength="5"/>            
+                        </p:panelGrid>
+                    </div>
+                    <p:panel>
+                        <div align="center">
+                            <p:commandButton value="Salvar"
+                                             icon="pi pi-save"
+                                             actionListener="#{controleVoo.salvarVooAgendado()}"
+                                             update="tab:listaVooAgendado growl"
+                                             process="@form"
+                                             oncomplete="if(!args.validationFailed){PF('dlgVooAgendado').hide();}"/>
+                        </div>
+                    </p:panel>
+                </h:form>
+                <ui:include src="/templates/ajaxstatus.xhtml"/>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</html>
+

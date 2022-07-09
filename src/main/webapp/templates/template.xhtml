@@ -32,6 +32,19 @@
                                         ajax="false"/>
                         </p:submenu>
                     </p:column>
+                    <p:column>
+                        <p:submenu label="Voos">
+                        <p:menuitem action="#{controleVoo.listar()}"
+                                        value="Manutenção de Voo"
+                                        ajax="false"/> 
+                        <p:menuitem action="#{controleVooAgendado.listar()}"
+                                        value="Manutenção de Voo Agendado"
+                                        ajax="false"/>
+                        <p:menuitem action="#{controlePassagem.listar()}"
+                                        value="Manutenção de Passagem"
+                                        ajax="false"/>
+                        </p:submenu>
+                    </p:column>
                 </p:submenu>
             </p:megaMenu>
         </h:form>
