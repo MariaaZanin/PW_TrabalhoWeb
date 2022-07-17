@@ -32,7 +32,6 @@
                                         value="Manutenção de Pessoa"
                                         ajax="false"/>
                         </p:submenu>
-                        
                     </p:column>
                     
                     <p:column>
@@ -50,6 +49,17 @@
                         </p:submenu>
                     </p:column>
                     
+                    <p:column>
+                        <p:submenu label="Relatórios"
+                                   rendered="#{controleLogin.usuarioAutenticado != null}">
+                          <p:menuitem action="#{controleCidade.imprimeCidade()}"
+                                        value="Imprime Cidades"
+                                        icon="pi pi-print"
+                                        ajax="false"
+                                        target="_blank"/>
+                        </p:submenu>
+                    </p:column>
+
                     </p:submenu>
                     <p:submenu label="Usuario: #{controleLogin.usuarioAutenticado != null ?
                                                  controleLogin.usuarioAutenticado.nomdUsuaurio : ''}">

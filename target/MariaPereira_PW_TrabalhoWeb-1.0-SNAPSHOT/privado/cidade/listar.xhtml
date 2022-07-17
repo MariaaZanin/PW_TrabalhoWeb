@@ -16,6 +16,11 @@
                                  update="formEdicao"
                                  process="@this"
                                  oncomplete="PF('dlg').show();"/>
+                <p:commandButton value="Imprimir"
+                                 icon="pi pi-print"
+                                 action="#{controleCidade.imprimeCidade()}"
+                                 ajax="false"
+                                 onclick="this.form.target = '_blank';"/>
                 <div align="center">
                     <p:panelGrid columns="11">
                         <p:outputLabel value="Ordem:"/>
@@ -82,6 +87,11 @@
                                 process="@this"
                                 title="Remover o objeto de id: #{obj.id}"
                                 onclick="if (!confirm('Deseja remover o objeto de id: #{obj.id}')) return false"/>
+                            <p:commandButton title="Imprimir"
+                                 icon="pi pi-print"
+                                 action="#{controleCidade.imprimeCidade(obj.id)}"
+                                 ajax="false"
+                                 onclick="this.form.target = '_blank';"/>
                         </div>
                     </p:column>
                 </p:dataTable>

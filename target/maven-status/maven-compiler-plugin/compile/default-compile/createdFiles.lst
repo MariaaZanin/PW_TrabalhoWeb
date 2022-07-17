@@ -15,6 +15,7 @@ br\edu\ifsul\controle\ControlePessoa.class
 br\edu\ifsul\dao\PassagemDAO.class
 br\edu\ifsul\dao\Ordem.class
 br\edu\ifsul\dao\ClasseDAO.class
+br\edu\ifsul\util\UtilRelatorios.class
 br\edu\ifsul\dao\UsuarioDAO.class
 br\edu\ifsul\dao\VooAgendadoDAO.class
 br\edu\ifsul\converters\ConverterVoo.class
