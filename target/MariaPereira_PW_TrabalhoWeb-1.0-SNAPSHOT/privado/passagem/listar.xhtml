@@ -16,7 +16,8 @@
                                  icon="pi pi-plus"
                                  update="formEdicao"
                                  process="@this"
-                                 oncomplete="PF('dlg').show();"/>
+                                 oncomplete="PF('dlg').show();"
+                                 rendered="#{p:ifGranted('ADMINISTRADOR')}"/>
                 <div align="center">
                     <p:panelGrid columns="11">
                         <p:outputLabel value="Ordem:"/>
@@ -86,7 +87,8 @@
                                              title="Editar"
                                              update="formEdicao"
                                              process="@this"
-                                             oncomplete="PF('dlg').show();"/>
+                                             oncomplete="PF('dlg').show();"
+                                             rendered="#{p:ifGranted('ADMINISTRADOR')}"/>
 <!--                            <p:commandButton actionListener="#{controlePassagem.excluir(obj.id)}"
                                              icon="pi pi-trash"
                                              title="Remover"
@@ -167,7 +169,8 @@
                                              icon="pi pi-save"
                                              actionListener="#{controlePassagem.salvar()}"
                                              update="formEdicao formListagem"
-                                             oncomplete="if(!args.validationFailed){PF('dlg').hide();}"/>
+                                             oncomplete="if(!args.validationFailed){PF('dlg').hide();}"
+                                             rendered="#{p:ifGranted('ADMINISTRADOR')}"/>
                         </div>
                     </p:panel>
                 </h:form>       

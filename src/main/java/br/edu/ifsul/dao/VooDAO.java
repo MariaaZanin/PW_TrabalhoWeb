@@ -24,6 +24,7 @@ public class VooDAO<TIPO> extends DAOGenerico<Voo> implements Serializable {
     public Voo getObjectByID(Object id) throws Exception {
         Voo obj = em.find(Voo.class, id);
         obj.getVoo_agendado().size();
+        obj.getAeroporto().size();
         return obj;
     }
     

@@ -1,6 +1,8 @@
 package br.edu.ifsul.controle;
 
+import br.edu.ifsul.dao.AeroportoDAO;
 import br.edu.ifsul.dao.VooDAO;
+import br.edu.ifsul.modelo.Aeroporto;
 import br.edu.ifsul.modelo.Voo;
 import br.edu.ifsul.modelo.VooAgendado;
 import br.edu.ifsul.util.Util;
@@ -19,6 +21,10 @@ public class ControleVoo implements Serializable {
     
     private VooAgendado vooAgendado;
     private Boolean novoVooAgendado;
+    
+    @EJB
+    private AeroportoDAO<Aeroporto> daoAeroporto;
+    private Aeroporto aeroporto;
 
     public ControleVoo() {
 
@@ -44,6 +50,20 @@ public class ControleVoo implements Serializable {
     public void removerVooAgendado(int index){
         objeto.removerVooAgendado(index);
         Util.mensagemInformacao("Voo Agendado removido com sucesso!");
+    }
+    
+     public void removerAeroporto(Aeroporto obj) {
+        objeto.getAeroporto().remove(obj);
+        Util.mensagemInformacao("Aeroporto removido com sucesso!");
+    }
+    
+    public void adicionaAeroporto() {
+        if (!objeto.getAeroporto().contains(aeroporto)) {
+            objeto.getAeroporto().add(aeroporto);
+            Util.mensagemInformacao("Aeroporto adicionado com sucesso!");
+        } else {
+            Util.mensagemErro("Voo já possui este aeroporto");
+        }
     }
 
     public String listar() {
@@ -116,5 +136,22 @@ public class ControleVoo implements Serializable {
     public void setNovoVooAgendado(Boolean novoVooAgendado) {
         this.novoVooAgendado = novoVooAgendado;
     }
+
+    public AeroportoDAO<Aeroporto> getDaoAeroporto() {
+        return daoAeroporto;
+    }
+
+    public void setDaoAeroporto(AeroportoDAO<Aeroporto> daoAeroporto) {
+        this.daoAeroporto = daoAeroporto;
+    }
+
+    public Aeroporto getAeroporto() {
+        return aeroporto;
+    }
+
+    public void setAeroporto(Aeroporto aeroporto) {
+        this.aeroporto = aeroporto;
+    }
+    
     
 }
